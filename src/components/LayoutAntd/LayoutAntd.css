@@ -1,0 +1,119 @@
+@import "~antd/dist/antd.css";
+
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600&display=swap");
+:root {
+    --yellow: #f5bf23;
+    --black: #111;
+    --white: #fff;
+    --light-color: #666;
+    --light-bg: #eee;
+    --box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    --border: 0.1rem solid rgba(0, 0, 0, 0.3);
+}
+
+.logoLink .logo {
+    float: left;
+    width: 100px;
+    height: 50px;
+    margin: 5px 5px 0 0;
+    background-image: url(../../../public/images/logo.png);
+    background-size: cover;
+}
+
+.header {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    -webkit-box-shadow: var(--box-shadow);
+    box-shadow: var(--box-shadow);
+    padding: 1.5rem 10%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    z-index: 1000;
+    background: var(--white);
+}
+
+.header .logo {
+    font-size: 2.5rem;
+    color: var(--black);
+    text-transform: capitalize;
+}
+
+.header .logo span {
+    color: var(--yellow);
+}
+
+.header .navbar a {
+    font-size: 20px;
+    color: var(--black);
+    text-transform: capitalize;
+    margin: 0 1rem;
+}
+
+.header .navbar a:hover {
+    color: var(--yellow);
+}
+
+.header .icons div {
+    height: 50px;
+    width: 50px;
+    line-height: 50px;
+    font-size: 2rem;
+    cursor: pointer;
+    text-align: center;
+    margin-left: 0.3rem;
+}
+
+.header .icons div:hover {
+    background: var(--black);
+    color: var(--white);
+}
+
+.header #menu-btn {
+    display: none;
+}
+
+@media (max-width: 1200px) {
+    .header {
+        padding: 1.5rem 2rem;
+    }
+}
+
+@media (max-width: 991px) {
+    html {
+        font-size: 55%;
+    }
+    .header #menu-btn {
+        display: inline-block;
+    }
+    .header .navbar {
+        position: absolute;
+        top: 99%;
+        left: 0;
+        right: 0;
+        background: var(--white);
+        border-top: var(--border);
+        border-bottom: var(--border);
+        -webkit-clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+        clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+        -webkit-transition: 0.2s linear;
+        transition: 0.2s linear;
+    }
+    .header .navbar.active {
+        -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+    .header .navbar a {
+        display: block;
+        margin: 0 3rem;
+    }
+}
