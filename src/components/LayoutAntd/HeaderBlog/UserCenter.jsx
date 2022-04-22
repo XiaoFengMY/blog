@@ -12,8 +12,7 @@ class UserCenter extends Component {
             id: 0,
             isLoggedIn: false,
             username: "未登录",
-            useravatar:
-                "https://tvax3.sinaimg.cn/large/9afb97dagy1ghovqlnjatj20u01fmhdt.jpg",
+            useravatar: ""
         };
         this.logout = this.logout.bind(this);
     }
@@ -23,20 +22,32 @@ class UserCenter extends Component {
             console.log("usercenter2: ", localStorage.username);
         } else {
             axios
-                .post(BASE_URL + "/users/loginStatus", {
-                    username: localStorage.username,
-                },{
-                    headers:{
-                        authorization:'Bearer '+window.localStorage.getItem('token')
+                .post(
+                    BASE_URL + "/users/loginStatus",
+                    {
+                        username: localStorage.username,
+                    },
+                    {
+                        headers: {
+                            authorization:
+                                "Bearer " +
+                                window.localStorage.getItem("token"),
+                        },
                     }
-                })
+                )
                 .then((res) => {
-                    this.setState({
-                        isLoggedIn: true,
-                        id: res.data.data.id,
-                        username: res.data.data.username,
-                        useravatar: res.data.data.useravatar,
-                    });
+                    if (res.data.code === 1) {
+                        this.setState({
+                            isLoggedIn: true,
+                            id: res.data.data.id,
+                            username: res.data.data.username,
+                            useravatar: res.data.data.useravatar,
+                        });
+                    } else {
+                        this.setState({
+                            isLoggedIn: false,
+                        });
+                    }
                 });
         }
     }

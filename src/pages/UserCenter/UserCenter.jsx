@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { BASE_URL } from "../../utils/url";
 import { useParams, NavLink, useNavigate } from "react-router-dom";
-import { Layout, Card, Avatar, Space, Button, Table, Tag } from "antd";
+import { Layout, Card, Avatar,message, Space, Button, Table, Tag } from "antd";
 const { Content, Sider } = Layout;
 const { Meta } = Card;
 
@@ -18,18 +18,36 @@ const UserCenter = () => {
                 params: {
                     sort: "comprehensive",
                     classify: "全部",
-                    username: localStorage.username,
+                    id: params.userId
+                },
+                headers: {
+                    authorization:
+                        "Bearer " + window.localStorage.getItem("token"),
                 },
             })
             .then((response) => {
                 setBlogs(response.data.data);
             });
         axios
-            .post(BASE_URL + "/users/showAvatar", { id: params.userId })
+            .post(
+                BASE_URL + "/users/showAvatar",
+                {id: params.userId},
+                {
+                    headers: {
+                        authorization:
+                            "Bearer " + window.localStorage.getItem("token"),
+                    },
+                }
+            )
             .then((response) => {
+                if(response.data.code === 1) {
                 setUserInfo(response.data.data);
+                }else{
+                    message.warning(response.data.error);
+                    navigate('/Home');
+                }
             });
-    }, [params.userId]);
+    }, [navigate, params.userId]);
 
     const handleDeleteBlog = () => {
         axios
@@ -38,8 +56,9 @@ const UserCenter = () => {
             })
             .then((response) => {
                 if (response.data.code === 1) {
-                    navigate("/Home");
+                    message.warning("删除成功");
                 } else {
+                    message.warning("删除失败");
                 }
             });
     };

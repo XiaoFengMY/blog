@@ -36,6 +36,7 @@ const BlogDetail = () => {
     const [blogDetail, setBlogDetail] = useState({});
     // eslint-disable-next-line no-unused-vars
     const [commentNums, setCommentNums] = useState(0);
+    const [comments, setComments] = useState([]);
     const navigate = useNavigate();
     const params = useParams();
 
@@ -46,7 +47,6 @@ const BlogDetail = () => {
         axios.post(BASE_URL + "/blogs/blogDetail", value).then((response) => {
             //防止内存泄漏
             if (isMounted) {
-                console.log("resorther", response.data.other);
                 var data = {
                     title: response.data.data.blogTitle,
                     author: response.data.data.blogAuthor,
@@ -66,6 +66,13 @@ const BlogDetail = () => {
                 setBlogDetail(data);
             }
         });
+        axios.post(BASE_URL + "/comments/blogCommentList", value).then((response) => {
+            //防止内存泄漏
+            if (isMounted) {
+                console.log("why detail",response.data)
+                setComments(response.data.commentList);
+            }
+        })
         return () => {
             isMounted = false;
         };
@@ -223,7 +230,7 @@ const BlogDetail = () => {
                     </Tabs>
                     <section id="blog_detail_comment">
                         <CommentAdd />
-                        <CommentList blogComments={blogDetail.blogComments} />
+                        <CommentList blogComments={comments} />
                     </section>
                 </Content>
                 <Sider

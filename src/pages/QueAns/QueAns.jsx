@@ -1,120 +1,37 @@
-import React from "react";
-import { Comment, Tooltip, List, Avatar } from "antd";
-import moment from "moment";
+import React, { useState, useEffect } from "react";
+import HtmlDiff from "htmldiff-js";
 
-const ExampleComment = () => (
-    <List
-        className="comment-list"
-        header={`${data.length} replies`}
-        itemLayout="horizontal"
-        dataSource={data}
-        renderItem={(item) => (
-            <li>
-                <Comment
-                    actions={[<span key="comment-nested-reply-to">回复</span>]}
-                    author={<a>{item.author}</a>}
-                    avatar={<Avatar src={item.avatar} alt="Han Solo" />}
-                    content={<p>{item.content}</p>}
-                >
-                    {item.children &&
-                        item.children.map((child) => {
-                            return (
-                                <Comment
-                                    actions={[
-                                        <span key="comment-nested-reply-to">
-                                            回复
-                                        </span>,
-                                    ]}
-                                    author={<a>{child.author}</a>}
-                                    avatar={
-                                        <Avatar src={child.avatar} alt="Han Solo" />
-                                    }
-                                    content={<p>{child.content}</p>}
-                                />
-                            );
-                        })
-                    }
-                </Comment>
-            </li>
-        )}
-    />
-);
+const QueAns = () => {
+    const [diffdom, setDiffdom] = useState("");
+    useEffect(() => {
+        let oldHtml = document.getElementById("oldHtml");
+        let newHtml = document.getElementById("newHtml");
+        var diffHtml =document.getElementById("htmlDiff");
 
-class QueAns extends React.PureComponent {
-    constructor() {
-        super();
-        this.state = {
-            fileList: [],
-        };
-    }
-    /*点击上传时触发*/
-    onChange = ({ fileList: newFileList }) => {
-        this.setState({ fileList: newFileList });
-        console.log(newFileList);
-    };
-    render() {
-        return (
-            <div style={{ marginTop: "100px" }}>
-                <ExampleComment />
-            </div>
+        diffHtml.innerHTML = HtmlDiff.execute(
+            oldHtml.innerHTML,
+            newHtml.innerHTML
         );
-    }
-}
+        console.log('hello ',diffHtml);
+        // setDiffdom(diffHtml);
+    }, []);
+    return (
+        <div style={{marginTop:"200px"}}>
+            <div id="oldHtml">
+                <p>
+                    Some <em>old</em> html here
+                </p>
+            </div>
 
-const data = [
-    {
-        actions: [<span key="comment-list-reply-to-0">回复</span>],
-        author: "Han ",
-        avatar: "https://joeschmoe.io/api/v1/random",
-        content:
-            "lorem ipsum dolor sit amet consectetur adipisicing elit. Qui, quisquam.",
-    },
-    {
-        actions: [<span key="comment-list-reply-to-0">回复</span>],
-        author: "Han Solo fdsf",
-        avatar: "https://joeschmoe.io/api/v1/random",
-        content:
-            "lorem ipsum dolor sit amet consectetur adipisicing elit. Qui, quisquam.",
-        children: [
-            {
-                actions: [<span key="comment-list-reply-to-0">回复</span>],
-                author: "Han dsds Solo",
-                avatar: "https://joeschmoe.io/api/v1/random",
-                content:
-                    "lorem ipsum dolor sit amet consectetur adipisicing elit. Qui, quisquam.",
-            },
-            {
-                actions: [<span key="comment-list-reply-to-0">回复</span>],
-                author: "Han Solo",
-                avatar: "https://joeschmoe.io/api/v1/random",
-                content:
-                    "lorem ipsum dolor sit amet consectetur adipisicing elit. Qui, quisquam.",
-            },
-        ],
-    },
-    {
-        actions: [<span key="comment-list-reply-to-0">回复</span>],
-        author: "Han dsdsd  Solo",
-        avatar: "https://joeschmoe.io/api/v1/random",
-        content:
-            "lorem ipsum dolor sit amet consectetur adipisicing elit. Qui, quisquam.",
-        children: [
-            {
-                actions: [<span key="comment-list-reply-to-0">回复</span>],
-                author: "Han Solo",
-                avatar: "https://joeschmoe.io/api/v1/random",
-                content:
-                    "lorem ipsum dolor sit amet consectetur adipisicing elit. Qui, quisquam.",
-            },
-            {
-                actions: [<span key="comment-list-reply-to-0">回复</span>],
-                author: "Han Solo",
-                avatar: "https://joeschmoe.io/api/v1/random",
-                content:
-                    "lorem ipsum dolor sit amet consectetur adipisicing elit. Qui, quisquam.",
-            },
-        ],
-    },
-];
+            <div id="newHtml">
+                <p>
+                    Some <b>new</b> html goes here
+                </p>
+            </div>
+
+            <div id="htmlDiff" ></div>
+        </div>
+    );
+};
 
 export default QueAns;

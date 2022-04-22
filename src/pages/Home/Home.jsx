@@ -166,11 +166,7 @@ const Home = () => {
                                                 {item.blogTitle}
                                             </NavLink>
                                         }
-                                        description={
-                                            <span>
-                                                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sequi eos voluptatem velit perspiciatis illum minus omnis quo natus illo! Perspiciatis dicta accusantium dolores consectetur ipsam optio illo quos, incidunt veniam!
-                                            </span>
-                                        }
+                                        description={item.blogRecommend}
                                     />
                                 </List.Item>
                             )}

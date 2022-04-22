@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import moment from "moment";
 import { Comment, Avatar, Form, Button, Input } from "antd";
 import { useParams } from "react-router-dom";
+import { BASE_URL } from "../../../utils/url";
 import axios from "axios";
 
 const { TextArea } = Input;
@@ -29,16 +30,23 @@ const CommentAdd = () => {
     const [value, setValue] = useState("");
     const params = useParams();
 
-    const handleSubmit = () => { 
+    const handleSubmit = () => {
         setSubmitting(true);
         axios
-            .post("http://47.103.209.160:9001/blogs/blogComment", {
-                id: params.BlogId,
-                author: localStorage.username,
-                avatar: "https://tse1-mm.cn.bing.net/th/id/R-C.7237ee86f5b57f5ae1c0a9cfab99a21f?rik=4l1sX91jBLVjDg&riu=http%3a%2f%2fi2.hdslb.com%2fbfs%2farchive%2fd1b0ef4edd2648defe28c2c2a605506b6262eb02.jpg&ehk=Bakt2tifjXbEwngmxlRUkRZPD5K56UayNDpvPaGvbaM%3d&risl=&pid=ImgRaw&r=0",
-                content: value,
-                datetime: moment(),
-            })
+            .post(
+                BASE_URL + "/comments/blogComment",
+                {
+                    id: params.BlogId,
+                    content: value,
+                    datetime: moment(),
+                },
+                {
+                    headers: {
+                        authorization:
+                            "Bearer " + window.localStorage.getItem("token"),
+                    },
+                }
+            )
             .then((res) => {
                 console.log(res);
             });

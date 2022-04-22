@@ -13,6 +13,8 @@
     "braft-utils": "^3.0.12",
     "diff": "^5.0.0",
     "draft-js-prism": "^1.0.6",
+    "htmldiff": "^0.0.4",
+    "htmldiff-js": "^1.0.5",
     "moment": "^2.29.1",
     "prismjs": "^1.26.0",
     "react": "^17.0.2",
@@ -46,5 +48,5 @@
       "last 1 safari version"
     ]
   },
-  "homepage":"./"
+  "homepage": "./Home"
 }

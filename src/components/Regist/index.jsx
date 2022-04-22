@@ -10,7 +10,6 @@ const RegistForm = () => {
     const [form] = Form.useForm();
     // axios.defaults.withCredentials = true; 
     const onFinish = (values) => {
-        console.log("Received values of form: ", values);
         axios.post(BASE_URL + "/users/regist", values)
         .then((res) => {
             console.log("Received res: ", res);

@@ -1,6 +1,6 @@
 import React, { createElement, useState } from "react";
 import moment from "moment";
-import { List, Comment, Avatar, Tooltip, Popover, Button } from "antd";
+import { List, Comment, Avatar, Tooltip, Popover } from "antd";
 import {
     DislikeOutlined,
     LikeOutlined,
@@ -62,7 +62,7 @@ const ExampleComment = () => {
     return (
         <List
             className="comment-list"
-            header={`${data.length} replies`}
+            header={`${data.length} 评论`}
             itemLayout="horizontal"
             dataSource={data}
             renderItem={(item) => (
@@ -116,58 +116,58 @@ const ExampleComment = () => {
 };
 
 const CommentList = (props) => {
-    console.log("hi", props.blogComments);
+    console.log("comment add ", props.blogComments);
     return (
         <section>
-            <ExampleComment></ExampleComment>
+            <ExampleComment commentList={props.blogComments}></ExampleComment>
         </section>
     );
 };
 
 const data = [
     {
-        author: "Han ",
-        avatar: "https://joeschmoe.io/api/v1/random",
+        author: "会员甲 ",
+        avatar: "https://pic2.zhimg.com/v2-37a71fb880e5462e57bdc894c4c5336f_r.jpg?source=1940ef5c",
         content:
-            "lorem ipsum dolor sit amet consectetur adipisicing elit. Qui, quisquam.",
+            "这是一条评论",
     },
     {
-        author: "Han Solo fdsf",
-        avatar: "https://joeschmoe.io/api/v1/random",
+        author: "会员乙",
+        avatar: "https://tse3-mm.cn.bing.net/th/id/OIP-C.L0eqrfLu9zx3pEl6ZxgYVAHaHa?pid=ImgDet&rs=1",
         content:
-            "lorem ipsum dolor sit amet consectetur adipisicing elit. Qui, quisquam.",
+            "请友善评论",
         children: [
             {
-                author: "Han dsds Solo",
-                avatar: "https://joeschmoe.io/api/v1/random",
+                author: "会员甲",
+                avatar: "https://pic2.zhimg.com/v2-37a71fb880e5462e57bdc894c4c5336f_r.jpg?source=1940ef5c",
                 content:
-                    "lorem ipsum dolor sit amet consectetur adipisicing elit. Qui, quisquam.",
+                    "测试",
             },
             {
-                author: "Han Solo",
-                avatar: "https://joeschmoe.io/api/v1/random",
+                author: "会员乙",
+                avatar: "https://tse3-mm.cn.bing.net/th/id/OIP-C.L0eqrfLu9zx3pEl6ZxgYVAHaHa?pid=ImgDet&rs=1",
                 content:
-                    "lorem ipsum dolor sit amet consectetur adipisicing elit. Qui, quisquam.",
+                    "OK",
             },
         ],
     },
     {
-        author: "Han dsdsd  Solo",
-        avatar: "https://joeschmoe.io/api/v1/random",
+        author: "会员丙",
+        avatar: "https://tse3-mm.cn.bing.net/th/id/OIP-C.bMpLom1CxNg3hJ1fEabwZwHaHa?w=184&h=184&c=7&r=0&o=5&pid=1.7",
         content:
-            "lorem ipsum dolor sit amet consectetur adipisicing elit. Qui, quisquam.",
+            "没问题",
         children: [
             {
-                author: "Han Solo",
-                avatar: "https://joeschmoe.io/api/v1/random",
+                author: "会员丁",
+                avatar: "https://tse2-mm.cn.bing.net/th/id/OIP-C.qNTOXFA4fslC3-S_CqACQgHaHa?w=204&h=204&c=7&r=0&o=5&pid=1.7",
                 content:
-                    "lorem ipsum dolor sit amet consectetur adipisicing elit. Qui, quisquam.",
+                    "好的",
             },
             {
-                author: "Han Solo",
-                avatar: "https://joeschmoe.io/api/v1/random",
+                author: "会员丁",
+                avatar: "https://tse2-mm.cn.bing.net/th/id/OIP-C.qNTOXFA4fslC3-S_CqACQgHaHa?w=204&h=204&c=7&r=0&o=5&pid=1.7",
                 content:
-                    "lorem ipsum dolor sit amet consectetur adipisicing elit. Qui, quisquam.",
+                    "可以呀",
             },
         ],
     },
