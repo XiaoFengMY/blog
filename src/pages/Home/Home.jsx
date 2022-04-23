@@ -122,7 +122,7 @@ const Home = () => {
                                         <Like
                                             likeNum={item.blogLikes}
                                             fontsize="20px"
-                                        ></Like>,
+                                        />,
                                         <Button
                                             type="link"
                                             href={`/BLogDetail/${item.id}#blog_detail_comment`}
@@ -155,7 +155,7 @@ const Home = () => {
                                                     {item.username.username}
                                                 </div>
                                                 <div>
-                                                    {item.blogRecommend}
+                                                    {item.username.introduce}
                                                 </div>
                                             </div>
                                         }

@@ -6,12 +6,15 @@ import {
     Input,
     Button,
     Select,
+    message,
     DatePicker,
     Divider,
     Avatar,
 } from "antd";
+import {  useNavigate } from "react-router-dom";
 import { AntDesignOutlined } from "@ant-design/icons";
 import { BASE_URL } from "../../utils/url";
+import moment from 'moment';
 import locale from "antd/lib/date-picker/locale/zh_CN";
 import "moment/locale/zh-cn";
 
@@ -27,11 +30,56 @@ const layout = {
 };
 
 const UserDetailEdit = () => {
-    const [blogs, setBlogs] = useState([]);
+    const [form] = Form.useForm();
+    const navigate = useNavigate();
 
     const onFinish = (values) => {
-        console.log(values);
+        axios
+            .post(
+                BASE_URL + "/users/editUserInfo",
+                {values},
+                {
+                    headers: {
+                        authorization:
+                            "Bearer " + window.localStorage.getItem("token"),
+                    },
+                }
+            )
+            .then((response) => {
+                if(response.data.code === 0) {
+                    message.success(response.data.message);
+                } else {
+                    message.success(response.data.message);
+                }
+            });
     };
+
+    useEffect(() => {
+        axios
+            .post(
+                BASE_URL + "/users/getUserInfo",
+                {},
+                {
+                    headers: {
+                        authorization:
+                            "Bearer " + window.localStorage.getItem("token"),
+                    },
+                }
+            )
+            .then((response) => {
+                if(response.data.code === 0) {
+                    message.success(response.data.error);
+                    navigate("/Home");
+                } else {
+                    console.log(response.data.data);
+                    var data = response.data.data;
+                    data.birthday  = moment(data.birthday);                    
+                    form.setFieldsValue({
+                        user: response.data.data,
+                    });
+                }
+            });
+    });
 
     return (
         <div style={{ width: "40%", margin: "80px auto 10px auto" }}>
@@ -40,15 +88,12 @@ const UserDetailEdit = () => {
 
             <Form
                 {...layout}
-                name="nest-messages"
+                name="userInfo"
                 onFinish={onFinish}
                 size="large"
+                form={form}
                 layout="vertical"
             >
-                <Form.Item name={["user", "userAvatar"]} label="头像">
-                    <Avatar size={100} icon={<AntDesignOutlined />} />
-                    <Button>修改头像</Button>
-                </Form.Item>
                 <Form.Item name={["user", "username"]} label="用户名">
                     <Input />
                 </Form.Item>
@@ -62,11 +107,11 @@ const UserDetailEdit = () => {
                 <Form.Item name={["user", "phone"]} label="手机号">
                     <Input />
                 </Form.Item>
-                <Form.Item name={["user", "introduction"]} label="个性签名">
-                    <Input.TextArea showCount maxLength={100} />
+                <Form.Item name={["user", "introduce"]} label="个性签名">
+                    <Input.TextArea showCount maxLength={10} />
                 </Form.Item>
                 <Form.Item
-                    name={["user", "gender"]}
+                    name={["user", "sex"]}
                     label="性别"
                     rules={[
                         {

@@ -2,13 +2,14 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { BASE_URL } from "../../utils/url";
 import { useParams, NavLink, useNavigate } from "react-router-dom";
-import { Layout, Card, Avatar,message, Space, Button, Table, Tag } from "antd";
+import { Layout, Card, Avatar, message, Space, Button, Table, Tag } from "antd";
 const { Content, Sider } = Layout;
 const { Meta } = Card;
 
 const UserCenter = () => {
     const [blogs, setBlogs] = useState([]);
     const [userInfo, setUserInfo] = useState({});
+    const [loginUser, setLoginUser] = useState(false);
     const navigate = useNavigate();
     const params = useParams();
 
@@ -18,7 +19,7 @@ const UserCenter = () => {
                 params: {
                     sort: "comprehensive",
                     classify: "全部",
-                    id: params.userId
+                    id: params.userId,
                 },
                 headers: {
                     authorization:
@@ -31,7 +32,7 @@ const UserCenter = () => {
         axios
             .post(
                 BASE_URL + "/users/showAvatar",
-                {id: params.userId},
+                { id: params.userId },
                 {
                     headers: {
                         authorization:
@@ -40,11 +41,16 @@ const UserCenter = () => {
                 }
             )
             .then((response) => {
-                if(response.data.code === 1) {
-                setUserInfo(response.data.data);
-                }else{
+                if (response.data.code === 1) {
+                    if (response.data.isLoginUser) {
+                        setLoginUser(true);
+                    } else {
+                        setLoginUser(false);
+                    }
+                    setUserInfo(response.data.data);
+                } else {
                     message.warning(response.data.error);
-                    navigate('/Home');
+                    navigate("/Home");
                 }
             });
     }, [navigate, params.userId]);
@@ -134,11 +140,19 @@ const UserCenter = () => {
                                 src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
                             />
                         }
-                        actions={[
-                            <Button type="link" href="/UserDetailEdit" block>
-                                编辑个人资料
-                            </Button>,
-                        ]}
+                        actions={
+                            loginUser
+                                ? [
+                                      <Button
+                                          type="link"
+                                          href="/UserDetailEdit"
+                                          block
+                                      >
+                                          编辑个人资料
+                                      </Button>,
+                                  ]
+                                : [<Button>关注</Button>]
+                        }
                     >
                         <Meta
                             avatar={
