@@ -15,23 +15,19 @@ const UserCenter = () => {
 
     useEffect(() => {
         axios
-            .get(BASE_URL + "/blogs/showBlogs", {
+            .get(BASE_URL + "/blogs/showUerBlogs", {
                 params: {
                     sort: "comprehensive",
                     classify: "全部",
                     id: params.userId,
-                },
-                headers: {
-                    authorization:
-                        "Bearer " + window.localStorage.getItem("token"),
-                },
+                }
             })
             .then((response) => {
                 setBlogs(response.data.data);
             });
         axios
             .post(
-                BASE_URL + "/users/showAvatar",
+                BASE_URL + "/users/showUserInfo",
                 { id: params.userId },
                 {
                     headers: {
@@ -78,11 +74,11 @@ const UserCenter = () => {
                 <NavLink to={`/BLogDetail/${record.id}`}>{text}</NavLink>
             ),
         },
-        {
+        /* {
             title: "作者",
             dataIndex: "blogAuthor",
             key: "blogAuthor",
-        },
+        }, */
         /* {
             title: "协作者",
             dataIndex: "address",
