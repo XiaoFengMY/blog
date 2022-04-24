@@ -1,8 +1,8 @@
-import React, { useState,useEffect } from "react";
-import { Button, Space,message } from "antd";
+import React, { useState, useEffect } from "react";
+import { Button, Space, message } from "antd";
 import axios from "axios";
 import { BASE_URL } from "../../utils/url";
-import IconFont from "../../components/IconFont/IconFont"
+import IconFont from "../../components/IconFont/IconFont";
 
 function Collect(props) {
     const [isCollected, setIsCollected] = useState(false);
@@ -19,10 +19,10 @@ function Collect(props) {
             })
             .then((response) => {
                 console.log("response", response.data.isCollected);
-                if(response.data.isCollected){
+                if (response.data.isCollected) {
                     setIsCollected(true);
                     setCollectFont("icon-shoucang");
-                }else{
+                } else {
                     setIsCollected(false);
                     setCollectFont("icon-shoucang1");
                 }
@@ -68,43 +68,5 @@ function Collect(props) {
         </Button>
     );
 }
-
-
-/* class Collect extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            isCollected: false,
-            collectFont: "icon-shoucang1",
-        };
-    }
-    render() {
-        return (
-            <Button type="text">
-                <Space
-                    onClick={this.handleCollect.bind(this)}
-                    style={{ fontSize: this.props.fontsize }}
-                >
-                    <IconFont type={this.state.collectFont}/>
-                    {this.props.collectNum}
-                </Space>
-            </Button>
-        );
-    }
-
-    handleCollect() {
-        if (this.state.isCollected) {
-            this.setState({
-                isCollected: false,
-                collectFont: "icon-shoucang1",
-            });
-        } else {
-            this.setState({
-                isCollected: true,
-                collectFont: "icon-shoucang",
-            });
-        }
-    }
-} */
 
 export default Collect;
