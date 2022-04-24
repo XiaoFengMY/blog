@@ -1,55 +1,69 @@
-import React, { Component } from "react";
-import { Button, Space } from "antd";
+import React, { useState, useEffect } from "react";
+import { Button, Space, message } from "antd";
 import axios from "axios";
 import { BASE_URL } from "../../utils/url";
 import IconFont from "../../components/IconFont/IconFont";
 
-class Like extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            isLiked: false,
-            likeFont: "icon-zan1",
-            likeNum: props.likeNum,
-        };
-    }
-    render() {
-        return (
-            <Button type="text">
-                <Space
-                    onClick={this.handleLike.bind(this)}
-                    style={{ fontSize: this.props.fontsize }}
-                >
-                    <IconFont type={this.state.likeFont} />
-                    {this.state.likeNum}
-                </Space>
-            </Button>
-        );
-    }
-
-    handleLike() {
-        let likeStateNum = this.state.likeNum;
-        if (this.state.isLiked) {
-            this.setState({
-                isLiked: false,
-                likeFont: "icon-zan",
-                likeNum: likeStateNum++,
+function Like(props) {
+    const [isLiked, setIsLiked] = useState(false);
+    const [likeFont, setLikeFont] = useState("icon-zan1");
+    const [likeNum, setLikeNum] = useState(props.likeNum);
+    useEffect(() => {
+        axios
+            .get(BASE_URL + "/orthers/isLiked", {
+                params: { blogId: props.blogId },
+                headers: {
+                    authorization:
+                        "Bearer " + window.localStorage.getItem("token"),
+                },
+            })
+            .then((response) => {
+                console.log("response", response.data.isLiked);
+                if(response.data.isLiked){
+                    setIsLiked(true);
+                    setLikeFont("icon-zan");
+                }else{
+                    setIsLiked(false);
+                    setLikeFont("icon-zan1");
+                }
             });
-            console.log("1", this.state.likeNum);
+    }, [props.blogId]);
+    const handleLike = () => {
+        if (window.localStorage.getItem("token")) {
             axios
-                .get(BASE_URL + "/blogs/likeBlog", { blogId: 1, userId: 1 })
+                .get(BASE_URL + "/orthers/likeBlog", {
+                    params: { blogId: props.blogId, isLiked: isLiked },
+                    headers: {
+                        authorization:
+                            "Bearer " + window.localStorage.getItem("token"),
+                    },
+                })
                 .then((response) => {
-                    console.log(response.data.data);
+                    message.warning(response.data.message);
                 });
+            let likeStateNum = likeNum;
+            if (isLiked) {
+                setIsLiked(false);
+                setLikeFont("icon-zan1");
+                setLikeNum(likeStateNum - 1);
+            } else {
+                setIsLiked(true);
+                setLikeFont("icon-zan");
+                setLikeNum(likeStateNum + 1);
+            }
         } else {
-            this.setState({
-                isLiked: true,
-                likeFont: "icon-zan1",
-                likeNum: likeStateNum--,
-            });
-            console.log("2", this.state.likeNum);
+            message.warning("请先登录");
         }
-    }
+    };
+
+    return (
+        <Button type="text">
+            <Space onClick={handleLike} style={{ fontSize: props.fontsize }}>
+                <IconFont type={likeFont} />
+                {likeNum}
+            </Space>
+        </Button>
+    );
 }
 
 export default Like;

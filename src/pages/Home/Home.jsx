@@ -122,6 +122,7 @@ const Home = () => {
                                         <Like
                                             likeNum={item.blogLikes}
                                             fontsize="20px"
+                                            blogId={item.id}
                                         />,
                                         <Button
                                             type="link"
