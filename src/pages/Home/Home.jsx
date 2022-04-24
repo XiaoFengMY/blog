@@ -134,8 +134,9 @@ const Home = () => {
                                             </Space>
                                         </Button>,
                                         <Collect
-                                            colectNum={item.blogCollects}
+                                            collectNum={item.blogCollects}
                                             fontsize="20px"
+                                            blogId={item.id}
                                         ></Collect>,
                                     ]}
                                 >
