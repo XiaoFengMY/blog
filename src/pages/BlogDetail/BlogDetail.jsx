@@ -14,6 +14,7 @@ import {
     BackTop,
     Tabs,
     Space,
+    message,
 } from "antd";
 import axios from "axios";
 import { BASE_URL } from "../../utils/url";
@@ -61,18 +62,22 @@ const BlogDetail = () => {
                     blogComments: response.data.data.blogComments,
                     blogReadings: response.data.data.blogReadings,
                     blogRecommend: response.data.other,
+                    blogCollects: response.data.data.blogCollects,
+                    blogLikes: response.data.data.blogLikes,
                 };
                 // setCommentNums(response.data.data.blogComments.length);
                 setBlogDetail(data);
             }
         });
-        axios.post(BASE_URL + "/comments/blogCommentList", value).then((response) => {
-            //防止内存泄漏
-            if (isMounted) {
-                console.log("why detail",response.data)
-                setComments(response.data.commentList);
-            }
-        })
+        axios
+            .post(BASE_URL + "/comments/blogCommentList", value)
+            .then((response) => {
+                //防止内存泄漏
+                if (isMounted) {
+                    console.log("why detail", response.data);
+                    setComments(response.data.commentList);
+                }
+            });
         return () => {
             isMounted = false;
         };
@@ -94,8 +99,10 @@ const BlogDetail = () => {
             )
             .then((response) => {
                 if (response.data.code === 1) {
+                    message.success("删除成功");
                     navigate("/Home");
                 } else {
+                    message.error("删除失败");
                 }
             });
     };
@@ -106,10 +113,14 @@ const BlogDetail = () => {
             style={{ width: "80%", margin: "1px auto" }}
         >
             <Layout>
-                <Sider width={50} theme="light">
+                <Sider width={100} theme="light">
                     <Affix offsetTop={120}>
                         <div>
-                            <Like likeNum={commentNums} fontsize="25px" />
+                            <Like
+                                likeNum={blogDetail.blogLikes}
+                                blogId={params.BlogId}
+                                fontsize="25px"
+                            />
                             <Button
                                 type="link"
                                 href="#blog_detail_comment"
@@ -120,7 +131,11 @@ const BlogDetail = () => {
                                     {commentNums}
                                 </Space>
                             </Button>
-                            <Collect colectNum={commentNums} fontsize="25px" />
+                            <Collect
+                                collectNum={blogDetail.blogCollects}
+                                blogId={params.BlogId}
+                                fontsize="25px"
+                            />
                         </div>
                     </Affix>
                 </Sider>

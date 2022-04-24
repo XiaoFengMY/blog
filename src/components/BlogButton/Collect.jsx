@@ -18,7 +18,7 @@ function Collect(props) {
                 },
             })
             .then((response) => {
-                console.log("response", response.data.isCollected);
+                setCollectNum(props.collectNum);
                 if (response.data.isCollected) {
                     setIsCollected(true);
                     setCollectFont("icon-shoucang");
@@ -27,7 +27,7 @@ function Collect(props) {
                     setCollectFont("icon-shoucang1");
                 }
             });
-    }, [props.blogId]);
+    }, [props.blogId, props.collectNum]);
     const handleCollect = () => {
         console.log("isCollected", isCollected);
         console.log("collectNum", collectNum);

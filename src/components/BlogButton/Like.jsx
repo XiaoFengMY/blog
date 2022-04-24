@@ -18,7 +18,7 @@ function Like(props) {
                 },
             })
             .then((response) => {
-                console.log("response", response.data.isLiked);
+                setLikeNum(props.likeNum);
                 if(response.data.isLiked){
                     setIsLiked(true);
                     setLikeFont("icon-zan");
@@ -27,7 +27,7 @@ function Like(props) {
                     setLikeFont("icon-zan1");
                 }
             });
-    }, [props.blogId]);
+    }, [props.blogId, props.likeNum]);
     const handleLike = () => {
         if (window.localStorage.getItem("token")) {
             axios
