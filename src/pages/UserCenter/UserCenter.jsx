@@ -9,9 +9,26 @@ const { Meta } = Card;
 const UserCenter = () => {
     const [blogs, setBlogs] = useState([]);
     const [userInfo, setUserInfo] = useState({});
-    const [loginUser, setLoginUser] = useState(false);
+    const [loginUser, setLoginUser] = useState("unFocusUser");
     const navigate = useNavigate();
     const params = useParams();
+
+    const UserButton = () => {
+        switch (loginUser) {
+            case "loginUser":
+                return (
+                    <Button type="link" href="/UserDetailEdit" block>
+                        编辑个人资料
+                    </Button>
+                );
+            case "unFocusUser":
+                return <Button onClick={focusUser}>关注</Button>;
+            case "focusUser":
+                return <Button onClick={focusUser}>取消关注</Button>;
+            default:
+                return <Button onClick={focusUser}>关注</Button>;
+        }
+    };
 
     useEffect(() => {
         axios
@@ -20,7 +37,7 @@ const UserCenter = () => {
                     sort: "comprehensive",
                     classify: "全部",
                     id: params.userId,
-                }
+                },
             })
             .then((response) => {
                 setBlogs(response.data.data);
@@ -28,7 +45,7 @@ const UserCenter = () => {
         axios
             .post(
                 BASE_URL + "/users/showUserInfo",
-                { id: params.userId },
+                { userId: params.userId },
                 {
                     headers: {
                         authorization:
@@ -38,18 +55,14 @@ const UserCenter = () => {
             )
             .then((response) => {
                 if (response.data.code === 1) {
-                    if (response.data.isLoginUser) {
-                        setLoginUser(true);
-                    } else {
-                        setLoginUser(false);
-                    }
+                    setLoginUser(response.data.isLoginUser);
                     setUserInfo(response.data.data);
                 } else {
                     message.warning(response.data.error);
                     navigate("/Home");
                 }
             });
-    }, [navigate, params.userId]);
+    }, [navigate, params.userId,loginUser]);
 
     const handleDeleteBlog = () => {
         axios
@@ -64,6 +77,32 @@ const UserCenter = () => {
                 }
             });
     };
+
+    function focusUser() {
+        axios
+            .post(
+                BASE_URL + "/users/focusUser",
+                {
+                    userId: params.userId,
+                    isLoginUser: loginUser,
+                },
+                {
+                    headers: {
+                        authorization:
+                            "Bearer " + window.localStorage.getItem("token"),
+                    },
+                }
+            )
+            .then((response) => {
+                if (response.data.code === 1) {
+                    setLoginUser(response.data.isLoginUser);
+                    message.success(response.data.message);
+                } else {
+                    setLoginUser(response.data.isLoginUser);
+                    message.warning(response.data.message);
+                }
+            });
+    }
 
     const columns = [
         {
@@ -136,19 +175,7 @@ const UserCenter = () => {
                                 src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
                             />
                         }
-                        actions={
-                            loginUser
-                                ? [
-                                      <Button
-                                          type="link"
-                                          href="/UserDetailEdit"
-                                          block
-                                      >
-                                          编辑个人资料
-                                      </Button>,
-                                  ]
-                                : [<Button>关注</Button>]
-                        }
+                        actions={[<UserButton />]}
                     >
                         <Meta
                             avatar={
@@ -166,11 +193,11 @@ const UserCenter = () => {
                         >
                             <div style={{ padding: "12px" }}>
                                 <div>关注</div>
-                                <span>{userInfo.userFocus}</span>
+                                <span>{userInfo.userFocusNum}</span>
                             </div>
                             <div style={{ padding: "12px" }}>
                                 <div>粉丝</div>
-                                <span>{userInfo.userFans}</span>
+                                <span>{userInfo.userFansNum}</span>
                             </div>
                             <div style={{ padding: "12px" }}>
                                 <div>声望</div>

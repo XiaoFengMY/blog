@@ -148,13 +148,23 @@ const Home = () => {
                                                     width: "100px",
                                                 }}
                                             >
-                                                <Avatar src={BASE_URL + "/" + item.username.useravatar} />
+                                                <Avatar
+                                                    src={
+                                                        BASE_URL +
+                                                        "/" +
+                                                        item.username.useravatar
+                                                    }
+                                                />
                                                 <div
                                                     style={{
                                                         marginTop: "10px",
                                                     }}
                                                 >
-                                                    {item.username.username}
+                                                    <NavLink
+                                                        to={`/UserCenter/${item.username.id}`}
+                                                    >
+                                                        {item.username.username}
+                                                    </NavLink>
                                                 </div>
                                                 <div>
                                                     {item.username.introduce}

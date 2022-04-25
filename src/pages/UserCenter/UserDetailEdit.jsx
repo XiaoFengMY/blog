@@ -71,7 +71,6 @@ const UserDetailEdit = () => {
                     message.success(response.data.error);
                     navigate("/Home");
                 } else {
-                    console.log(response.data.data);
                     var data = response.data.data;
                     data.birthday  = moment(data.birthday);                    
                     form.setFieldsValue({
@@ -100,7 +99,7 @@ const UserDetailEdit = () => {
                 <Form.Item
                     name={["user", "email"]}
                     label="邮箱"
-                    rules={[{ type: "email" }]}
+                    rules={[{ type: "email", message: "邮箱格式不正确" }]}
                 >
                     <Input />
                 </Form.Item>
@@ -115,7 +114,7 @@ const UserDetailEdit = () => {
                     label="性别"
                     rules={[
                         {
-                            message: "Please select gender!",
+                            message: "请选择一项!",
                         },
                     ]}
                 >
