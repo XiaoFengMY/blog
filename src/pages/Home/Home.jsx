@@ -101,7 +101,7 @@ const Home = () => {
                     >
                         <Menu.Item key="comprehensive">综合排序</Menu.Item>
                         <Menu.Item key="nowTime">时间最新</Menu.Item>
-                        <Menu.Item key="focus"> 关注</Menu.Item>
+                        <Menu.Item key="reading"> 阅读排行</Menu.Item>
                     </Menu>
                     <div
                         className="site-layout-background"
