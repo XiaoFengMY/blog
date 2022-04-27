@@ -25,7 +25,7 @@ const Editor = ({ onChange, onSubmit, submitting, value }) => (
     </>
 );
 
-const CommentAdd = () => {
+const CommentAdd = ({commentId}) => {
     const [submitting, setSubmitting] = useState(false);
     const [value, setValue] = useState("");
     const params = useParams();
@@ -37,6 +37,7 @@ const CommentAdd = () => {
                 BASE_URL + "/comments/blogComment",
                 {
                     id: params.BlogId,
+                    commentId: commentId,
                     content: value,
                     datetime: moment(),
                 },

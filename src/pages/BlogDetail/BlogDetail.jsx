@@ -35,9 +35,6 @@ const { Title, Paragraph } = Typography;
 
 const BlogDetail = () => {
     const [blogDetail, setBlogDetail] = useState({});
-    // eslint-disable-next-line no-unused-vars
-    const [commentNums, setCommentNums] = useState(0);
-    const [comments, setComments] = useState([]);
     const navigate = useNavigate();
     const params = useParams();
 
@@ -69,18 +66,6 @@ const BlogDetail = () => {
                 setBlogDetail(data);
             }
         });
-        axios
-            .post(BASE_URL + "/comments/blogCommentList", value)
-            .then((response) => {
-                //防止内存泄漏
-                if (isMounted) {
-                    console.log("why detail", response.data);
-                    setComments(response.data.commentList);
-                }
-            });
-        return () => {
-            isMounted = false;
-        };
     }, [params.BlogId]);
 
     const handleDeleteBlog = () => {
@@ -128,7 +113,6 @@ const BlogDetail = () => {
                             >
                                 <Space style={{ fontSize: "25px" }}>
                                     <IconFont type="icon-pinglun" />
-                                    {commentNums}
                                 </Space>
                             </Button>
                             <Collect
@@ -202,8 +186,8 @@ const BlogDetail = () => {
                             <Descriptions.Item label="阅读量">
                                 {blogDetail.blogReadings}
                             </Descriptions.Item>
-                            <Descriptions.Item label="评论数">
-                                {commentNums}
+                            <Descriptions.Item label="推荐数">
+                                {blogDetail.blogLikes}
                             </Descriptions.Item>
                             <Descriptions.Item label="发布时间">
                                 {blogDetail.createTime}
@@ -245,7 +229,7 @@ const BlogDetail = () => {
                     </Tabs>
                     <section id="blog_detail_comment">
                         <CommentAdd />
-                        <CommentList blogComments={comments} />
+                        <CommentList />
                     </section>
                 </Content>
                 <Sider

@@ -1,18 +1,24 @@
-import React, { createElement, useState } from "react";
+import React, { createElement, useState, useEffect } from "react";
 import moment from "moment";
+import axios from "axios";
+import { useParams, NavLink } from "react-router-dom";
 import { List, Comment, Avatar, Tooltip, Popover } from "antd";
+import { BASE_URL } from "../../../utils/url";
 import {
     DislikeOutlined,
     LikeOutlined,
     DislikeFilled,
     LikeFilled,
 } from "@ant-design/icons";
-import ReplyComment from "../CommentAdd/index"
+import ReplyComment from "../CommentAdd/index";
 
 const ExampleComment = () => {
+    const params = useParams();
+
     const [likes, setLikes] = useState(0);
     const [dislikes, setDislikes] = useState(0);
     const [action, setAction] = useState(null);
+    const [commentList, setCommentList] = useState([]);
 
     const like = () => {
         setLikes(!likes);
@@ -26,57 +32,92 @@ const ExampleComment = () => {
         setAction("disliked");
     };
 
-    const content = (
-        <div>
-            <ReplyComment></ReplyComment>
-        </div>
-    );
+    useEffect(() => {
+        axios
+            .post(BASE_URL + "/comments/blogCommentList", {
+                blogId: params.BlogId,
+            })
+            .then((response) => {
+                console.log("::::", response.data.data);
+                setCommentList(response.data.data);
+            });
+    }, [params.BlogId]);
 
-    const actions = [
-        <Tooltip key="comment-basic-like" title="赞">
-            <span onClick={like}>
-                {createElement(action === "liked" ? LikeFilled : LikeOutlined)}
-                <span className="comment-action">{likes}</span>
-            </span>
-        </Tooltip>,
-        <Tooltip key="comment-basic-dislike" title="踩">
-            <span onClick={dislike}>
-                {React.createElement(
-                    action === "disliked" ? DislikeFilled : DislikeOutlined
-                )}
-                <span className="comment-action">{dislikes}</span>
-            </span>
-        </Tooltip>,
-        <Popover
-            overlayStyle={{width:"600px"}}
-            key="comment-basic-reply-to"
-            placement="bottom"
-            content={content}
-            title="回复评论"
-            trigger="click"
-        >
-            回复
-        </Popover>,
-    ];
+    const Content = ({ commentId }) => {
+        return (
+            <div>
+                <ReplyComment commentId={commentId} />
+            </div>
+        );
+    };
 
     return (
         <List
             className="comment-list"
-            header={`${data.length} 评论`}
+            header={`${commentList.length} 评论`}
             itemLayout="horizontal"
-            dataSource={data}
+            dataSource={commentList}
             renderItem={(item) => (
                 <li>
                     <Comment
-                        actions={actions}
-                        author={<span>{item.author}</span>}
-                        avatar={<Avatar src={item.avatar} alt="Han Solo" />}
-                        content={<p>{item.content}</p>}
+                        actions={[
+                            <Tooltip key="comment-basic-like" title="赞">
+                                <span onClick={like}>
+                                    {createElement(
+                                        action === "liked"
+                                            ? LikeFilled
+                                            : LikeOutlined
+                                    )}
+                                    <span className="comment-action">
+                                        {likes}
+                                    </span>
+                                </span>
+                            </Tooltip>,
+                            <Tooltip key="comment-basic-dislike" title="踩">
+                                <span onClick={dislike}>
+                                    {React.createElement(
+                                        action === "disliked"
+                                            ? DislikeFilled
+                                            : DislikeOutlined
+                                    )}
+                                    <span className="comment-action">
+                                        {dislikes}
+                                    </span>
+                                </span>
+                            </Tooltip>,
+                            <Popover
+                                className={item.username}
+                                overlayStyle={{ width: "600px" }}
+                                key="comment-basic-reply-to"
+                                placement="bottom"
+                                content={<Content commentId={item.id} />}
+                                title="回复评论"
+                                trigger="click"
+                            >
+                                回复
+                            </Popover>,
+                        ]}
+                        author={
+                            <NavLink to={`/UserCenter/${item.username.id}`}>
+                                {item.username.username}
+                            </NavLink>
+                        }
+                        avatar={
+                            <Avatar
+                                src={BASE_URL + "/" + item.username.useravatar}
+                                alt="Han Solo"
+                            />
+                        }
+                        content={<p>{item.commentContent}</p>}
                         datetime={
                             <Tooltip
-                                title={moment().format("YYYY-MM-DD HH:mm:ss")}
+                                title={moment(item.createTime)
+                                    .utc()
+                                    .format("YYYY-MM-DD HH:mm:ss")}
                             >
-                                <span>{moment().fromNow()}</span>
+                                <span>
+                                    {moment(item.createTime).utc().fromNow()}
+                                </span>
                             </Tooltip>
                         }
                     >
@@ -85,23 +126,66 @@ const ExampleComment = () => {
                                 return (
                                     <Comment
                                         key={index}
-                                        actions={actions}
-                                        author={<span>{child.author}</span>}
+                                        actions={[
+                                            <Tooltip
+                                                key="comment-basic-like"
+                                                title="赞"
+                                            >
+                                                <span onClick={like}>
+                                                    {createElement(
+                                                        action === "liked"
+                                                            ? LikeFilled
+                                                            : LikeOutlined
+                                                    )}
+                                                    <span className="comment-action">
+                                                        {likes}
+                                                    </span>
+                                                </span>
+                                            </Tooltip>,
+                                            <Tooltip
+                                                key="comment-basic-dislike"
+                                                title="踩"
+                                            >
+                                                <span onClick={dislike}>
+                                                    {React.createElement(
+                                                        action === "disliked"
+                                                            ? DislikeFilled
+                                                            : DislikeOutlined
+                                                    )}
+                                                    <span className="comment-action">
+                                                        {dislikes}
+                                                    </span>
+                                                </span>
+                                            </Tooltip>,
+                                        ]}
+                                        author={
+                                            <NavLink
+                                                to={`/UserCenter/${child.username.id}`}
+                                            >
+                                                {item.username.username}
+                                            </NavLink>
+                                        }
                                         avatar={
                                             <Avatar
-                                                src={child.avatar}
+                                                src={
+                                                    BASE_URL +
+                                                    "/" +
+                                                    child.username.useravatar
+                                                }
                                                 alt="Han Solo"
                                             />
                                         }
-                                        content={<p>{child.content}</p>}
+                                        content={<p>{child.commentContent}</p>}
                                         datetime={
                                             <Tooltip
-                                                title={moment().format(
-                                                    "YYYY-MM-DD HH:mm:ss"
-                                                )}
+                                                title={moment(
+                                                    child.commentTime
+                                                ).format("YYYY-MM-DD HH:mm:ss")}
                                             >
                                                 <span>
-                                                    {moment().fromNow()}
+                                                    {moment(child.commentTime)
+                                                        .utc()
+                                                        .fromNow()}
                                                 </span>
                                             </Tooltip>
                                         }
@@ -115,62 +199,12 @@ const ExampleComment = () => {
     );
 };
 
-const CommentList = (props) => {
-    console.log("comment add ", props.blogComments);
+const CommentList = () => {
     return (
         <section>
-            <ExampleComment commentList={props.blogComments}></ExampleComment>
+            <ExampleComment></ExampleComment>
         </section>
     );
 };
-
-const data = [
-    {
-        author: "会员甲 ",
-        avatar: "https://pic2.zhimg.com/v2-37a71fb880e5462e57bdc894c4c5336f_r.jpg?source=1940ef5c",
-        content:
-            "这是一条评论",
-    },
-    {
-        author: "会员乙",
-        avatar: "https://tse3-mm.cn.bing.net/th/id/OIP-C.L0eqrfLu9zx3pEl6ZxgYVAHaHa?pid=ImgDet&rs=1",
-        content:
-            "请友善评论",
-        children: [
-            {
-                author: "会员甲",
-                avatar: "https://pic2.zhimg.com/v2-37a71fb880e5462e57bdc894c4c5336f_r.jpg?source=1940ef5c",
-                content:
-                    "测试",
-            },
-            {
-                author: "会员乙",
-                avatar: "https://tse3-mm.cn.bing.net/th/id/OIP-C.L0eqrfLu9zx3pEl6ZxgYVAHaHa?pid=ImgDet&rs=1",
-                content:
-                    "OK",
-            },
-        ],
-    },
-    {
-        author: "会员丙",
-        avatar: "https://tse3-mm.cn.bing.net/th/id/OIP-C.bMpLom1CxNg3hJ1fEabwZwHaHa?w=184&h=184&c=7&r=0&o=5&pid=1.7",
-        content:
-            "没问题",
-        children: [
-            {
-                author: "会员丁",
-                avatar: "https://tse2-mm.cn.bing.net/th/id/OIP-C.qNTOXFA4fslC3-S_CqACQgHaHa?w=204&h=204&c=7&r=0&o=5&pid=1.7",
-                content:
-                    "好的",
-            },
-            {
-                author: "会员丁",
-                avatar: "https://tse2-mm.cn.bing.net/th/id/OIP-C.qNTOXFA4fslC3-S_CqACQgHaHa?w=204&h=204&c=7&r=0&o=5&pid=1.7",
-                content:
-                    "可以呀",
-            },
-        ],
-    },
-];
 
 export default CommentList;
