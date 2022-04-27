@@ -38,7 +38,6 @@ const ExampleComment = () => {
                 blogId: params.BlogId,
             })
             .then((response) => {
-                console.log("::::", response.data.data);
                 setCommentList(response.data.data);
             });
     }, [params.BlogId]);

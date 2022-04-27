@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import moment from "moment";
-import { Comment, Avatar, Form, Button, Input } from "antd";
+import { Comment, Avatar, Form, Button, Input,message } from "antd";
 import { useParams } from "react-router-dom";
 import { BASE_URL } from "../../../utils/url";
 import axios from "axios";
@@ -49,11 +49,17 @@ const CommentAdd = ({commentId}) => {
                 }
             )
             .then((res) => {
-                console.log(res);
+                if (res.data.code === 1) {
+                    message.success(res.data.messsage);
+                    setSubmitting(false);
+                    setValue("");
+                }else{
+                    message.error(message.data.messsage);
+                    setSubmitting(false);
+                    setValue("");
+                }
             });
-        console.log(value);
-        setValue("");
-        setSubmitting(false);
+
     };
 
     const handleChange = (e) => {

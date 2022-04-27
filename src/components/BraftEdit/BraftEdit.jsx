@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { PlusOutlined } from "@ant-design/icons";
 import { BASE_URL } from "../../utils/url";
-import { Form, Input, Select, Checkbox, Divider, Button } from "antd";
+import { Form, Input, Select, Checkbox, Divider, Button,message } from "antd";
 import BraftEditor from "braft-editor";
 import CodeHighlighter from "braft-extensions/dist/code-highlighter";
 import "braft-editor/dist/index.css";
@@ -15,9 +15,6 @@ import "prismjs/components/prism-jsx";
 import axios from "axios";
 
 const BraftEdit = () => {
-    // eslint-disable-next-line no-unused-vars
-    const [message, setMessage] = useState("");
-    // const [fileList, setFileList] = useState([]);
     const [items, setItems] = useState([
         "前端",
         "后端",
@@ -56,7 +53,6 @@ const BraftEdit = () => {
                     }
                 )
                 .then((response) => {
-                    console.log("promise fulfilled", response.data);
                     form.setFieldsValue({
                         blogTitle: response.data.data.blogTitle,
                         blogSort: response.data.data.blogSort,
@@ -65,7 +61,6 @@ const BraftEdit = () => {
                         blogContent: BraftEditor.createEditorState(
                             response.data.data.blogContent
                         ),
-                        // image:response.data.data.image,
                         blogSee: response.data.data.blogSee,
                     });
                 });
@@ -83,7 +78,6 @@ const BraftEdit = () => {
         list.blogContent = values.blogContent.toHTML();
         // list.image = fileList;
         list.blogSee = values.blogSee;
-        console.log("Received values of form: ", list);
         axios
             .post(BASE_URL + "/blogs/addBlog", list, {
                 headers: {
@@ -92,13 +86,12 @@ const BraftEdit = () => {
                 },
             })
             .then((res) => {
-                console.log("Received res: ", res);
                 if (res.status === 200) {
                     if (res.data.code === 1) {
                         // 不能在组件销毁后设置state
                         navigate("/Home");
                     } else {
-                        setMessage(res.data.error);
+                        message.error(res.data.error);
                     }
                 }
             });
@@ -109,22 +102,12 @@ const BraftEdit = () => {
     };
 
     const addItem = () => {
-        console.log("addItem");
         setItems([...items, sortName]);
     };
 
     function handleChange(value) {
         setTabs(value);
     }
-
-    /*     const onChange = ({ file, fileList: newFileList }) => {
-        if (file.status === "done") {
-            var imgurl = BASE_URL+"/"+file.response.imgurl
-            console.log("imgurl", imgurl);
-            newFileList.map((item) => (item.thumbUrl = imgurl));
-        }
-        setFileList(newFileList);
-    }; */
 
     return (
         <Form
@@ -252,24 +235,6 @@ const BraftEdit = () => {
                 />
             </Form.Item>
 
-            {/*             <Form.Item
-                extra="一张图片"
-                label="博客封面"
-                name="image"
-                valuePropName="fileList"
-                getValueFromEvent={normFile}
-            >
-                <Upload
-                    name="logo"
-                    action="http://localhost:9001/orthers/upload"
-                    listType="picture-card"
-                    onChange={onChange}
-                    maxCount={1}
-                >
-                    {fileList.length < 1 && "+ Upload"}
-                </Upload>
-            </Form.Item> */}
-
             <Form.Item
                 label="所有人可见"
                 name="blogSee"
@@ -317,16 +282,6 @@ const tailFormItemLayout = {
         },
     },
 };
-
-/* const normFile = (e) => {
-    console.log("Upload event:", e);
-
-    if (Array.isArray(e)) {
-        return e;
-    }
-
-    return e && e.fileList;
-}; */
 
 const options = {
     includeEditors: ["xiaoFengBlogEdit"],

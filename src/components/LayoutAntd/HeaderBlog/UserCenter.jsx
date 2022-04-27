@@ -13,7 +13,6 @@ function UserCenter() {
 
     useEffect(() => {
         if (localStorage.username === null) {
-            console.log("usercenter2: ", localStorage.username);
         } else {
             axios
                 .post(

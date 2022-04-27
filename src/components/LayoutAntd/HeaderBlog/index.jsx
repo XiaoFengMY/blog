@@ -11,7 +11,6 @@ const HeaderBlog = () => {
     const navigate = useNavigate();
 
     const onSearch = (value) => {
-        console.log("search: ",value);
         navigate(`/Home/${value}`);
     };
 

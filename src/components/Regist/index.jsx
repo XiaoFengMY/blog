@@ -12,7 +12,6 @@ const RegistForm = () => {
     const onFinish = (values) => {
         axios.post(BASE_URL + "/users/regist", values)
         .then((res) => {
-            console.log("Received res: ", res);
             if(res.status === 200) {
                 if(res.data.code === 1) {
                     // 不能在组件销毁后设置state

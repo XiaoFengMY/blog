@@ -29,9 +29,6 @@ function Collect(props) {
             });
     }, [props.blogId, props.collectNum]);
     const handleCollect = () => {
-        console.log("isCollected", isCollected);
-        console.log("collectNum", collectNum);
-        console.log("collectFont", collectFont);
         if (window.localStorage.getItem("token")) {
             axios
                 .get(BASE_URL + "/orthers/collectBlog", {

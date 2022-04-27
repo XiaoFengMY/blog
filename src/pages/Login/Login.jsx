@@ -13,16 +13,6 @@ class Login extends Component {
         };
     }
 
-    /* componentDidMount() {
-        axios.get('http://47.103.209.160:9001/testApi')
-        .then((res)=>{
-            console.log(res);
-            this.setState({
-                str: res.data
-            })
-        })
-    } */
-
     render() {
         return (
             <div className="login-container">
