@@ -9,11 +9,10 @@ import {
     message,
     DatePicker,
     Divider,
-    Avatar,
 } from "antd";
 import {  useNavigate } from "react-router-dom";
-import { AntDesignOutlined } from "@ant-design/icons";
 import { BASE_URL } from "../../utils/url";
+import UserAvatar from "../../components/Upload/UploadImage"
 import moment from 'moment';
 import locale from "antd/lib/date-picker/locale/zh_CN";
 import "moment/locale/zh-cn";
@@ -30,6 +29,7 @@ const layout = {
 };
 
 const UserDetailEdit = () => {
+    const [userAvatar, setUserAvatar] = useState("");
     const [form] = Form.useForm();
     const navigate = useNavigate();
 
@@ -72,7 +72,8 @@ const UserDetailEdit = () => {
                     navigate("/Home");
                 } else {
                     var data = response.data.data;
-                    data.birthday  = moment(data.birthday);                    
+                    data.birthday  = moment(data.birthday);
+                    setUserAvatar(data.useravatar)             
                     form.setFieldsValue({
                         user: response.data.data,
                     });
@@ -84,6 +85,7 @@ const UserDetailEdit = () => {
         <div style={{ width: "40%", margin: "80px auto 10px auto" }}>
             <PageHeader className="site-page-header" title="个人资料" />
             <Divider />
+            <UserAvatar userAvatar={userAvatar} />
 
             <Form
                 {...layout}
