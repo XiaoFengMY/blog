@@ -62,7 +62,6 @@ const BlogDetail = () => {
                     blogLikes: response.data.data.blogLikes,
                     editUser: response.data.data.editUser,
                 };
-                console.log("blogDetail", response.data.data);
                 // setCommentNums(response.data.data.blogComments.length);
                 setBlogDetail(data);
             }
