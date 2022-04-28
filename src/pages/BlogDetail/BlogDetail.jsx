@@ -12,6 +12,7 @@ import {
     Tag,
     List,
     BackTop,
+    Timeline,
     Tabs,
     Space,
     message,
@@ -47,7 +48,6 @@ const BlogDetail = () => {
             if (isMounted) {
                 var data = {
                     title: response.data.data.blogTitle,
-                    author: response.data.data.blogAuthor,
                     blogTabs: response.data.data.blogTabs,
                     createTime: moment(
                         new Date(response.data.data.createTime)
@@ -56,12 +56,13 @@ const BlogDetail = () => {
                         new Date(response.data.data.updateTime)
                     ).format("YYYY-MM-DD HH:mm:ss"),
                     content: response.data.data.blogContent,
-                    blogComments: response.data.data.blogComments,
                     blogReadings: response.data.data.blogReadings,
                     blogRecommend: response.data.other,
                     blogCollects: response.data.data.blogCollects,
                     blogLikes: response.data.data.blogLikes,
+                    editUser: response.data.data.editUser,
                 };
+                console.log("blogDetail", response.data.data);
                 // setCommentNums(response.data.data.blogComments.length);
                 setBlogDetail(data);
             }
@@ -180,9 +181,6 @@ const BlogDetail = () => {
                         ]}
                     >
                         <Descriptions size="small" column={3}>
-                            <Descriptions.Item label="作者">
-                                {blogDetail.author}
-                            </Descriptions.Item>
                             <Descriptions.Item label="阅读量">
                                 {blogDetail.blogReadings}
                             </Descriptions.Item>
@@ -194,19 +192,6 @@ const BlogDetail = () => {
                             </Descriptions.Item>
                             <Descriptions.Item label="最后更新时间">
                                 {blogDetail.updateTime}
-                            </Descriptions.Item>
-                            <Descriptions.Item label="协作者">
-                                <List
-                                    dataSource={blogDetail.blogTabs}
-                                    renderItem={(item) => (
-                                        <NavLink
-                                            to={`/Home/${params.BlogId}`}
-                                            key={item}
-                                        >
-                                            {item}
-                                        </NavLink>
-                                    )}
-                                />
                             </Descriptions.Item>
                         </Descriptions>
                     </PageHeader>
@@ -224,7 +209,25 @@ const BlogDetail = () => {
                             </Typography>
                         </TabPane>
                         <TabPane tab="历史" key="2">
-                            Content of Tab Pane 2
+                            <List
+                                dataSource={blogDetail.editUser}
+                                renderItem={(item, index) => (
+                                    <NavLink
+                                        to={`/Usercenter/${item.username.id}`}
+                                        key={index}
+                                    >
+                                        <Timeline mode="left">
+                                            <Timeline.Item
+                                                label={moment(
+                                                    item.editTime
+                                                ).format("YYYY-MM-DD HH:mm:ss")}
+                                            >
+                                                {item.username.username}
+                                            </Timeline.Item>
+                                        </Timeline>
+                                    </NavLink>
+                                )}
+                            />
                         </TabPane>
                     </Tabs>
                     <section id="blog_detail_comment">
