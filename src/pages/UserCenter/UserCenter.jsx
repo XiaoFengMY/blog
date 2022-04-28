@@ -2,14 +2,28 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { BASE_URL } from "../../utils/url";
 import { useParams, NavLink, useNavigate } from "react-router-dom";
-import { Layout, Card, Avatar, message, Space, Button, Table, Tag } from "antd";
+import {
+    Layout,
+    Card,
+    Avatar,
+    message,
+    Space,
+    Button,
+    Table,
+    Tag,
+    Tabs,
+} from "antd";
+import ShowBlogs from "../../components/ShowBlogs/ShowBlogs";
 const { Content, Sider } = Layout;
 const { Meta } = Card;
 
 const UserCenter = () => {
+    const [show, setShow] = useState([]);
     const [blogs, setBlogs] = useState([]);
     const [userInfo, setUserInfo] = useState({});
     const [loginUser, setLoginUser] = useState("unFocusUser");
+
+    const { TabPane } = Tabs;
     const navigate = useNavigate();
     const params = useParams();
 
@@ -62,7 +76,7 @@ const UserCenter = () => {
                     navigate("/Home");
                 }
             });
-    }, [navigate, params.userId,loginUser]);
+    }, [navigate, params.userId, loginUser]);
 
     const handleDeleteBlog = () => {
         axios
@@ -99,6 +113,27 @@ const UserCenter = () => {
                     message.success(response.data.message);
                 } else {
                     setLoginUser(response.data.isLoginUser);
+                    message.warning(response.data.message);
+                }
+            });
+    }
+
+    function callback(key) {
+        axios
+            .post(
+                BASE_URL + "/blogs/showSelectBlogs",
+                { userId: params.userId, select: key },
+                {
+                    headers: {
+                        authorization:
+                            "Bearer " + window.localStorage.getItem("token"),
+                    },
+                }
+            )
+            .then((response) => {
+                if (response.data.code === 1) {
+                    setShow(response.data.data);
+                } else {
                     message.warning(response.data.message);
                 }
             });
@@ -207,11 +242,21 @@ const UserCenter = () => {
                     </Card>
                 </Sider>
                 <Content>
-                    <Table
-                        columns={columns}
-                        dataSource={blogs}
-                        rowKey={(record) => record.id}
-                    />
+                    <Tabs defaultActiveKey="1" onChange={callback}>
+                        <TabPane tab="我的博客" key="mine">
+                            <Table
+                                columns={columns}
+                                dataSource={blogs}
+                                rowKey={(record) => record.id}
+                            />
+                        </TabPane>
+                        <TabPane tab="关注作者博客" key="user">
+                            <ShowBlogs blog={show} />
+                        </TabPane>
+                        <TabPane tab="收藏的博客" key="collect">
+                            <ShowBlogs blog={show} />
+                        </TabPane>
+                    </Tabs>
                 </Content>
             </Layout>
         </div>

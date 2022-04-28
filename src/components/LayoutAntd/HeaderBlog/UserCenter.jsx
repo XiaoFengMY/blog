@@ -50,11 +50,6 @@ function UserCenter() {
                 <NavLink to={`/UserCenter/${id}`}>个人中心</NavLink>
             </Button>
             <div>
-                <Button type="link" href="/UserCenter">
-                    我的收藏
-                </Button>
-            </div>
-            <div>
                 <Button onClick={logout} type="text">
                     退出登录
                 </Button>
