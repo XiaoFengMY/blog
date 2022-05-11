@@ -50,11 +50,11 @@ const CommentAdd = ({commentId}) => {
             )
             .then((res) => {
                 if (res.data.code === 1) {
-                    message.success(res.data.messsage);
+                    message.success(res.data.message);
                     setSubmitting(false);
                     setValue("");
                 }else{
-                    message.error(message.data.messsage);
+                    message.error(res.data.message);
                     setSubmitting(false);
                     setValue("");
                 }
