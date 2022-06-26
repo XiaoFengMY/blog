@@ -1,10 +1,22 @@
 
 .login-container .ant-layout-content .site-layout-background{
-    width:50%;
+    text-align: center;
+    width:36%;
+    height: 75vh;
     margin: 0 auto;
 }
 
+.login-container .ant-layout-content .site-layout-background #normal_login {
+    margin-top: 100px;
+}
+
 .regist-container .ant-layout-content .site-layout-background{
-    width:50%;
+    text-align: center;
+    width:36%;
+    height: 75vh;
     margin: 0 auto;
+}
+
+.regist-container .ant-layout-content .site-layout-background #register {
+    margin-top: 100px;
 }

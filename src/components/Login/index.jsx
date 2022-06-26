@@ -1,27 +1,25 @@
-import React, { useState } from 'react'
+import React, { useState } from "react";
 import { Form, Input, Button, Checkbox } from "antd";
 import { BASE_URL } from "../../utils/url";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import './Login.css'
-
+import "./Login.css";
 
 const LoginForm = () => {
-    const [ message, setMessage ] = useState('');
+    const [message, setMessage] = useState("");
     // useHistory 在 v6 中不可用
     const navigate = useNavigate();
-    // axios.defaults.withCredentials = true; 
+    // axios.defaults.withCredentials = true;
     const onFinish = (values) => {
-        axios.post(BASE_URL + "/users/login", values)
-        .then((res) => {
-            if(res.status === 200) {
-                if(res.data.code === 1) {
+        axios.post(BASE_URL + "/users/login", values).then((res) => {
+            if (res.status === 200) {
+                if (res.data.code === 1) {
                     localStorage.token = res.data.token;
                     // 不能在组件销毁后设置state
-                    navigate('/Home');
-                }else{
+                    navigate("/Home");
+                } else {
                     setMessage(res.data.error);
                 }
             }
@@ -37,7 +35,7 @@ const LoginForm = () => {
             }}
             onFinish={onFinish}
         >
-            <h1 style={{textAlign:"center"}}>登录</h1>
+            <h1 style={{ textAlign: "center" }}>登录</h1>
             <Form.Item
                 name="username"
                 label="账号"
@@ -77,13 +75,16 @@ const LoginForm = () => {
                     <Checkbox>记住我</Checkbox>
                 </Form.Item>
 
-                <Link className="login-form-forgot" to="">
-                    忘记密码
-                </Link> 
-                <span style={{marginLeft:"20px"}}>
-                    <Link to="/Regist">没有账号，立即注册!</Link>
-                </span>
-                
+                <div style={{margin: "10px"}}>
+                    <Link className="login-form-forgot" to="">
+                        忘记密码
+                    </Link>
+                </div>
+                <div style={{margin: "10px"}}>
+                    <span style={{ marginLeft: "20px" }}>
+                        <Link to="/Regist">没有账号，立即注册!</Link>
+                    </span>
+                </div>
             </Form.Item>
 
             <Form.Item>

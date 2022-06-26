@@ -1,37 +1,27 @@
-import React, { useState, useEffect } from "react";
-import HtmlDiff from "htmldiff-js";
+import React from "react";
+import MdEditor from "react-markdown-editor-lite";
+import ReactMarkdown from "react-markdown";
+import "react-markdown-editor-lite/lib/index.css";
 
-const QueAns = () => {
-    const [diffdom, setDiffdom] = useState("");
-    useEffect(() => {
-        let oldHtml = document.getElementById("oldHtml");
-        let newHtml = document.getElementById("newHtml");
-        var diffHtml =document.getElementById("htmlDiff");
-
-        diffHtml.innerHTML = HtmlDiff.execute(
-            oldHtml.innerHTML,
-            newHtml.innerHTML
-        );
-        console.log('hello ',diffHtml);
-        // setDiffdom(diffHtml);
-    }, []);
+function QueAns() {
+    function handleEditorChange({ html, text }) {
+        console.log("handleEditorChange", html, text);
+    }
+    function renderHTML(text) {
+        // 使用 react-markdownｓ
+        return React.createElement(ReactMarkdown, {}, text);
+    }
     return (
-        <div style={{marginTop:"200px"}}>
-            <div id="oldHtml">
-                <p>
-                    Some <em>old</em> html here
-                </p>
-            </div>
-
-            <div id="newHtml">
-                <p>
-                    Some <b>new</b> html goes here
-                </p>
-            </div>
-
-            <div id="htmlDiff" ></div>
+        <div style={{marginTop:"100px"}}>
+            <MdEditor
+                value="# Title"
+                placeholder="请输入"
+                style={{ height: "500px" }}
+                renderHTML={renderHTML}
+                onChange={handleEditorChange}
+            />
         </div>
     );
-};
+}
 
 export default QueAns;

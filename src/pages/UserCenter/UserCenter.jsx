@@ -193,7 +193,7 @@ const UserCenter = () => {
     ];
 
     return (
-        <div style={{ width: "60%", margin: "80px auto 10px auto" }}>
+        <div style={{ width: "60%",height:"75vh", margin: "80px auto 10px auto" }}>
             <Layout style={{ background: "#fff" }}>
                 <Sider
                     breakpoint="xl"
